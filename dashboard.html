@@ -70,6 +70,38 @@
     }
 
     loadProjects();
+    <script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+  // Connect to Supabase (uses your environment variables from Vercel)
+  const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+  console.log('✅ Supabase connected:', supabase);
+
+  // Get your button and list elements
+  const button = document.getElementById('createProject');
+  const list = document.getElementById('projectList');
+
+  // Button creates a new project
+  button.addEventListener('click', async () => {
+    const { data, error } = await supabase
+      .from('projects')
+      .insert([{ name: 'New AI Project', created_at: new Date() }]);
+
+    if (error) {
+      console.error('❌ Error:', error);
+      alert('Something went wrong!');
+    } else {
+      console.log('✅ Project created:', data);
+      const li = document.createElement('li');
+      li.textContent = 'New AI Project';
+      list.appendChild(li);
+      alert('Project created!');
+    }
+  });
+</script>
   </script>
 </body>
 </html>
